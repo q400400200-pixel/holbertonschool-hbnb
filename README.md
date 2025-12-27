@@ -58,6 +58,6 @@ These diagrams describe the structure and behavior of the HBnB system.
 ## Contributors
 This project was designed by:
 
-- **q400400200-pixel**
-- **had271**
-- **Reemabdu213**
+- [q400400200-pixel](https://github.com/q400400200-pixel)
+- [had271](https://github.com/had271)
+- [Reemabdu213](https://github.com/Reemabdu213)
