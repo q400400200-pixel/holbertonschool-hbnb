@@ -22,7 +22,7 @@ def create_app(config_name='development'):
     )
     
     # Register namespaces (we'll add these later)
-    # api.add_namespace(users.api, path='/api/v1/users')
+    api.add_namespace(users.api, path='/api/v1/users')
     # api.add_namespace(places.api, path='/api/v1/places')
     # api.add_namespace(reviews.api, path='/api/v1/reviews')
     # api.add_namespace(amenities.api, path='/api/v1/amenities')

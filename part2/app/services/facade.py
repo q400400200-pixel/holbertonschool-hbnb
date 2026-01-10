@@ -60,6 +60,10 @@ class HBnBFacade:
 
         # IMPORTANT: repository.update expects dict
         return self.user_repo.update(user_id, data)
+    def get_all_users(self):
+        """Retrieve all users"""
+        return self.user_repo.get_all()
+
 
     # =====================
     # Amenity methods
