@@ -11,7 +11,8 @@ facade = HBnBFacade()
 user_model = api.model('User', {
     'first_name': fields.String(required=True, description='First name of the user'),
     'last_name': fields.String(required=True, description='Last name of the user'),
-    'email': fields.String(required=True, description='Email of the user')
+    'email': fields.String(required=True, description='Email of the user'),
+    'password': fields.String(required=True, description='Password of the user')
 })
 
 
@@ -44,12 +45,13 @@ class UserList(Resource):
             return {'error': 'Email already registered'}, 400
 
         try:
+            # Hash the password before storing
+            if 'password' in user_data:
+                user_data['password'] = hash_password(user_data['password'])
             new_user = facade.create_user(user_data)
             return {
                 'id': new_user.id,
-                'first_name': new_user.first_name,
-                'last_name': new_user.last_name,
-                'email': new_user.email
+                'message': 'User successfully created'
             }, 201
         except ValueError as e:
             return {'error': str(e)}, 400
