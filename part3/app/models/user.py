@@ -47,7 +47,23 @@ class User(BaseModel):
             raise ValueError("Invalid email format")
         
         return email
+     
+    def hash_password(self, password):
+        """Hashes the password before storing it."""
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
     
+    def verify_password(self, password):
+        """Verifies if the provided password matches the hashed password."""
+        return bcrypt.check_password_hash(self.password, password)
+    
+    def validate_password(self, key, value):
+        if not isinstance(value, str):
+            raise TypeError("Password must be a string")
+        if len(value) < 8:
+            raise ValueError("Password must be at least 8 characters long")
+        return self.hash_password(value)
+
+
     def update(self, data):
         """Update user data"""
         if 'first_name' in data:
