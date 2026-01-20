@@ -4,10 +4,15 @@ Flask application initialization
 from flask import Flask
 from flask_restx import Api
 from app.api.v1 import users, places, reviews, amenities
+from flask_jwt_extended import JWTManager
+
+jwt = JWTManager()
 
 def create_app(config_class="development"):
     """Create and configure the Flask application"""
     app = Flask(__name__)
+
+     jwt.init_app(app)
 
     # Load configuration
     from config import config
