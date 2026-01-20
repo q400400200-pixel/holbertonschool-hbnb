@@ -40,19 +40,20 @@ class UserList(Resource):
     @api.response(400, 'Invalid input data')
     def post(self):
         """Register a new user"""
-        user_data = api.payload
+        try:
+            user_data = api.payload
 
-        existing_user = facade.get_user_by_email(user_data['email'])
-        if existing_user:
-            return {'error': 'Email already registered'}, 400
+            existing_user = facade.get_user_by_email(user_data['email'])
+            if existing_user:
+              return {'error': 'Email already registered'}, 400
 
-        new_user = facade.create_user(user_data)
-        new_user.hash_password(user_data['password'])
+             new_user = facade.create_user(user_data)
+             new_user.hash_password(user_data['password'])
         
-        return {
+             return {
                 'id': new_user.id,
                 'message': 'User successfully created'
-            }, 201
+                }, 201
         except ValueError as e:
             return {'error': str(e)}, 400
 
