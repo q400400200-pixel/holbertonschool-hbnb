@@ -4,17 +4,18 @@ Flask application initialization
 from flask import Flask
 from flask_restx import Api
 from app.api.v1 import users, places, reviews, amenities
-from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager #المكتبه الي تتعامل مع JWT TOKENS عشان تفعل النظام 
+
 
 bcrypt = Bcrypt()
-jwt = JWTManager()
+jwt = JWTManager() # ربط مع FLASK 
 
 def create_app(config_class="development"):
     """Create and configure the Flask application"""
     app = Flask(__name__)
-    jwt.init_app(app)
-     bcrypt.init_app(app)
+    bcrypt.init_app(app)
+    jwt.init_app(app) # ربط JWT مع التطبيق 
     # Load configuration
     from config import config
     app.config.from_object(config[config_class])
