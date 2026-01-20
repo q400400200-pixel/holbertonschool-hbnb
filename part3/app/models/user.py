@@ -4,6 +4,7 @@ User Model
 """
 from app.models.base_model import BaseModel
 import re
+from app import bcrypt
 
 
 class User(BaseModel):
