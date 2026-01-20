@@ -5,13 +5,13 @@ from flask import Flask
 from flask_restx import Api
 from app.api.v1 import users, places, reviews, amenities
 
-def create_app(config_class="config.DevelopmentConfig"):
+def create_app(config_class="development"):
     """Create and configure the Flask application"""
     app = Flask(__name__)
 
     # Load configuration
     from config import config
-    app.config.from_object(config[config_name])
+    app.config.from_object(config[config_class])
     
     # Initialize Flask-RESTX API
     api = Api(
