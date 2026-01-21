@@ -70,13 +70,10 @@ class HBnBFacade:
     
     def get_user_by_email(self, email):
         """نلقى المستخدم من إيميله - الفايدة: نتحقق إن المستخدم موجود قبل ما نعطيه توكن"""
-    
-    users = self.user_repo.get_all()  # نجيب كل المستخدمين اللي عندنا
-    
-    for user in users:  # نلف على كل واحد فيهم
-        if user.email == email:  # لو لقينا الإيميل اللي ندور عنه
-            return user  # نرجع بياناته
-    
+        users = self.user_repo.get_all()  # نجيب كل المستخدمين اللي عندنا
+        for user in users:  # نلف على كل واحد فيهم
+            if user.email == email:  # لو لقينا الإيميل اللي ندور عنه
+                return user  # نرجع بياناته
         return None  # لو ما لقيناه، نرجع None
     # =====================
     # Amenity methods
