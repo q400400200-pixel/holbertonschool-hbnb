@@ -11,7 +11,7 @@ from app.api.v1.auth import api as auth
 bcrypt = Bcrypt()
 jwt = JWTManager() # ربط مع FLASK 
 
-def create_app(config_class="development"):
+def create_app(config_class=config.DevelopmentConfig):
     """Create and configure the Flask application"""
     app = Flask(__name__)
     bcrypt.init_app(app)
