@@ -69,7 +69,7 @@ class HBnBFacade:
         return self.user_repo.get_all()
     
     def get_user_by_email(self, email):
-    """نلقى المستخدم من إيميله - الفايدة: نتحقق إن المستخدم موجود قبل ما نعطيه توكن"""
+        """نلقى المستخدم من إيميله - الفايدة: نتحقق إن المستخدم موجود قبل ما نعطيه توكن"""
     
     users = self.user_repo.get_all()  # نجيب كل المستخدمين اللي عندنا
     
