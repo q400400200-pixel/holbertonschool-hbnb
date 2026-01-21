@@ -53,7 +53,7 @@ class User(BaseModel):
         if not isinstance(value, bool):
             raise TypeError("Is Admin must be a boolean")
         return value
-     @validates('password')
+    @validates('password')
     def validate_password(self, key, value):
         if not isinstance(value, str):
             raise TypeError("Password must be a string")
