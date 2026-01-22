@@ -44,19 +44,19 @@ class UserList(Resource):
             print(is_admin)
             if not is_admin:
                 return {'error': 'Forbidden'}, 403
-        existing_user = facade.get_user_by_email(user_data['email'])
+       existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400
-
-            new_user = facade.create_user(user_data)
-            new_user.hash_password(user_data['password'])
         
-            return {
-                'id': new_user.id,
-                'message': 'User successfully created'
-                }, 201
+        # ← الكود هنا خارج الـ if!
         try:
             new_user = facade.create_user(user_data)
+            new_user.hash_password(user_data['password'])  # ← تشفير الباسورد!
+            
+            return {  # ← return موجود!
+                'id': new_user.id,
+                'message': 'User successfully created'
+            }, 201
         except ValueError as e:
             return {'error': str(e)}, 400
 
