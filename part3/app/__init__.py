@@ -1,34 +1,21 @@
 from flask import Flask
-from flask_restx import Api
-from config import DevelopmentConfig
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 
-from app.api.v1 import users
-from app.api.v1.auth import api as auth
-from app.api.v1.protected import api as protected
+from app.api.v1 import api_v1_bp
 
 bcrypt = Bcrypt()
 jwt = JWTManager()
 
-def create_app(config_class=DevelopmentConfig):
+def create_app():
     app = Flask(__name__)
-    app.config.from_object(DevelopmentConfig)
 
-    # flask-jwt-extended يستخدم SECRET_KEY
-    # لازم تكون موجودة في config
+    app.config['SECRET_KEY'] = 'super_secret_key'
+    app.config['JWT_SECRET_KEY'] = app.config['SECRET_KEY']
+
     bcrypt.init_app(app)
     jwt.init_app(app)
 
-    api = Api(
-        app,
-        version='1.0',
-        title='HBnB API',
-        description='HBnB Application API'
-    )
-
-    api.add_namespace(users.api, path='/api/v1/users')
-    api.add_namespace(auth, path='/api/v1/auth')
-    api.add_namespace(protected, path='/api/v1')
+    app.register_blueprint(api_v1_bp)
 
     return app
