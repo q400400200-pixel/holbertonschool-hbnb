@@ -44,7 +44,7 @@ class UserList(Resource):
             print(is_admin)
             if not is_admin:
                 return {'error': 'Forbidden'}, 403
-       existing_user = facade.get_user_by_email(user_data['email'])
+        existing_user = facade.get_user_by_email(user_data['email'])
         if existing_user:
             return {'error': 'Email already registered'}, 400
         
