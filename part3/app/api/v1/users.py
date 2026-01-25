@@ -4,41 +4,34 @@ User API endpoints
 """
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
-from app.services.facade import HBnBFacade
+from app.services.facade import facade
 
 api = Namespace('users', description='User operations')
-facade = HBnBFacade()
 
 # User model for input validation
 user_model = api.model('User', {
-    'first_name': fields.String(required=True, description='First name of the user'),
-    'last_name': fields.String(required=True, description='Last name of the user'),
-    'email': fields.String(required=True, description='Email of the user'),
-    'password': fields.String(required=True, description='Password of the user'),
-    'is_admin': fields.Boolean(description='Admin status of the user', default=False)
+    'first_name': fields.String(required=True, description='First name'),
+    'last_name': fields.String(required=True, description='Last name'),
+    'email': fields.String(required=True, description='Email address'),
+    'password': fields.String(required=True, description='Password')
 })
 
 @api.route('/')
 class UserList(Resource):
     @api.response(200, 'List of users retrieved successfully')
     def get(self):
-        """Retrieve a list of all users"""
+        """Get all users"""
         users = facade.get_all_users()
         return [user.to_dict() for user in users], 200
     
-    @api.expect(user_model, validate=True)
+    @api.expect(user_model)
     @api.response(201, 'User successfully created')
-    @api.response(400, 'Email already registered')
-    @api.response(400, 'Invalid input data')
+    @api.response(400, 'Invalid input')
     def post(self):
         """Register a new user"""
         user_data = api.payload
         
         try:
-            # facade.create_user will handle:
-            # 1. Email validation
-            # 2. Duplicate check
-            # 3. Password hashing
             new_user = facade.create_user(user_data)
             
             return {
@@ -47,7 +40,6 @@ class UserList(Resource):
             }, 201
         except ValueError as e:
             return {'error': str(e)}, 400
-
 
 @api.route('/<user_id>')
 @api.param('user_id', 'The user identifier')
