@@ -6,9 +6,9 @@ from app.persistence.repository import InMemoryRepository
 class HBnBFacade:
     def __init__(self):
         self.user_repo = InMemoryRepository()
-        self.place_repo = InMemoryRepository()
-        self.review_repo = InMemoryRepository()
-        self.amenity_repo = InMemoryRepository()
+        self.place_repo = InMemoryRepository()      # تاسك 3: إضافة repository للأماكن
+        self.review_repo = InMemoryRepository()     # تاسك 3: إضافة repository للتقييمات
+        self.amenity_repo = InMemoryRepository()    # تاسك 3: إضافة repository للمرافق
     
     # ========== User Methods ==========
     def create_user(self, user_data):
@@ -42,6 +42,7 @@ class HBnBFacade:
         """Get user by ID"""
         return self.user_repo.get(user_id)
     
+    # تاسك 3: دالة جديدة لتعديل بيانات المستخدم (PUT /api/v1/users/<user_id>)
     def update_user(self, user_id, user_data):
         """Update user information"""
         user = self.user_repo.get(user_id)
@@ -55,7 +56,8 @@ class HBnBFacade:
         
         return user
     
-    # ========== Place Methods ==========
+    # ========== Place Methods - تاسك 3 ==========
+    # تاسك 3: دالة إنشاء مكان جديد (POST /api/v1/places/)
     def create_place(self, place_data):
         """Create a new place"""
         owner = self.user_repo.get(place_data['owner_id'])
@@ -74,14 +76,17 @@ class HBnBFacade:
         self.place_repo.add(place)
         return place
     
+    # تاسك 3: دالة جلب مكان بالـ ID
     def get_place(self, place_id):
         """Get a place by ID"""
         return self.place_repo.get(place_id)
     
+    # تاسك 3: دالة جلب كل الأماكن (عام - بدون تسجيل دخول)
     def get_all_places(self):
         """Get all places"""
         return self.place_repo.get_all()
     
+    # تاسك 3: دالة تعديل المكان (PUT /api/v1/places/<place_id>)
     def update_place(self, place_id, place_data):
         """Update a place"""
         place = self.place_repo.get(place_id)
@@ -91,7 +96,8 @@ class HBnBFacade:
         place.update(place_data)
         return place
     
-    # ========== Review Methods ==========
+    # ========== Review Methods - تاسك 3 ==========
+    # تاسك 3: دالة إنشاء تقييم جديد (POST /api/v1/reviews/)
     def create_review(self, review_data):
         """Create a new review"""
         place = self.place_repo.get(review_data['place_id'])
@@ -113,14 +119,17 @@ class HBnBFacade:
         place.add_review(review)
         return review
     
+    # تاسك 3: دالة جلب تقييم بالـ ID
     def get_review(self, review_id):
         """Get a review by ID"""
         return self.review_repo.get(review_id)
     
+    # تاسك 3: دالة جلب كل التقييمات
     def get_all_reviews(self):
         """Get all reviews"""
         return self.review_repo.get_all()
     
+    # تاسك 3: دالة جلب تقييمات مكان معين (للتحقق من عدم التكرار)
     def get_reviews_by_place(self, place_id):
         """Get all reviews for a specific place"""
         place = self.place_repo.get(place_id)
@@ -128,6 +137,7 @@ class HBnBFacade:
             return []
         return place.reviews
     
+    # تاسك 3: دالة تعديل التقييم (PUT /api/v1/reviews/<review_id>)
     def update_review(self, review_id, review_data):
         """Update a review"""
         review = self.review_repo.get(review_id)
@@ -137,14 +147,14 @@ class HBnBFacade:
         review.update(review_data)
         return review
     
+    # تاسك 3: دالة حذف التقييم (DELETE /api/v1/reviews/<review_id>)
     def delete_review(self, review_id):
         """Delete a review"""
         return self.review_repo.delete(review_id)
     
-    # ========== Amenity Methods (if needed) ==========
+    # ========== Amenity Methods ==========
     def get_amenity(self, amenity_id):
         """Get an amenity by ID"""
         return self.amenity_repo.get(amenity_id)
 
-# Create a single instance
 facade = HBnBFacade()
