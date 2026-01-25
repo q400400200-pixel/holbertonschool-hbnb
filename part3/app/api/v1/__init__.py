@@ -9,6 +9,6 @@ api_v1_bp = Blueprint('api_v1', __name__, url_prefix='/api/v1')
 
 api = Api(api_v1_bp, title='HBnB API', version='1.0')
 
-api.add_namespace(users_ns)
-api.add_namespace(auth_ns)
-api.add_namespace(protected_ns)
+api.add_namespace(users_ns, path='/users')
+api.add_namespace(auth_ns, path='/auth')
+api.add_namespace(protected_ns, path='/protected')
