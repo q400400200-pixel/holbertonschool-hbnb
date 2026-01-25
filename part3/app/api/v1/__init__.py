@@ -6,6 +6,7 @@ from app.api.v1.auth import api as auth_ns
 from app.api.v1.protected import api as protected_ns
 from app.api.v1.places import api as places_ns
 from app.api.v1.reviews import api as reviews_ns
+from app.api.v1.amenities import api as amenities_ns  # تاسك 4: إضافة amenities
 
 api_v1_bp = Blueprint('api_v1', __name__, url_prefix='/api/v1')
 
@@ -16,3 +17,4 @@ api.add_namespace(auth_ns, path='/auth')
 api.add_namespace(protected_ns, path='/protected')
 api.add_namespace(places_ns, path='/places')
 api.add_namespace(reviews_ns, path='/reviews')
+api.add_namespace(amenities_ns, path='/amenities')  # تاسك 4: تسجيل amenities namespace

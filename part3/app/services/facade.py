@@ -152,9 +152,37 @@ class HBnBFacade:
         """Delete a review"""
         return self.review_repo.delete(review_id)
     
-    # ========== Amenity Methods ==========
+    # ========== Amenity Methods - تاسك 3 & 4 ==========
+    # تاسك 4: دالة إنشاء مرفق جديد (POST /api/v1/amenities/) - فقط Admin
+    def create_amenity(self, amenity_data):
+        """Create a new amenity"""
+        from app.models.amenity import Amenity
+        
+        amenity = Amenity(
+            name=amenity_data['name']
+        )
+        
+        self.amenity_repo.add(amenity)
+        return amenity
+    
+    # تاسك 3: دالة جلب مرفق بالـ ID
     def get_amenity(self, amenity_id):
         """Get an amenity by ID"""
         return self.amenity_repo.get(amenity_id)
+    
+    # تاسك 4: دالة جلب كل المرافق (GET /api/v1/amenities/) - عام
+    def get_all_amenities(self):
+        """Get all amenities"""
+        return self.amenity_repo.get_all()
+    
+    # تاسك 4: دالة تعديل المرفق (PUT /api/v1/amenities/<id>) - فقط Admin
+    def update_amenity(self, amenity_id, amenity_data):
+        """Update an amenity"""
+        amenity = self.amenity_repo.get(amenity_id)
+        if not amenity:
+            return None
+        
+        amenity.update(amenity_data)
+        return amenity
 
 facade = HBnBFacade()

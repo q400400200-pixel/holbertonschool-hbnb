@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_identity  # تاسك 3: استيراد مكتبة JWT للمصادقة
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt  # تاسك 4: إضافة get_jwt
 from app.services import facade
 
 api = Namespace('places', description='Place operations')
@@ -40,7 +40,7 @@ class PlaceList(Resource):
     @jwt_required()  # تاسك 3: يتطلب تسجيل دخول لإنشاء مكان
     def post(self):
         """Create a new place"""
-        current_user = get_jwt_identity()  # تاسك 3: جلب معرف المستخدم من الـ JWT
+        current_user = get_jwt_identity()  # تاسك 3: جلب معرف المستخدم من JWT
         place_data = api.payload
         
         place_data['owner_id'] = current_user  # تاسك 3: تعيين المالك تلقائياً لمنع الانتحال
@@ -79,13 +79,17 @@ class PlaceResource(Resource):
     @jwt_required()  # تاسك 3: يتطلب تسجيل دخول لتعديل المكان
     def put(self, place_id):
         """Update a place"""
-        current_user = get_jwt_identity()  # تاسك 3: جلب المستخدم الحالي
+        current_user_id = get_jwt_identity()  # تاسك 3: جلب المستخدم الحالي
+        current_user = get_jwt()  # تاسك 4: جلب كامل معلومات JWT
+        is_admin = current_user.get('is_admin', False)  # تاسك 4: التحقق من Admin
+        
         place = facade.get_place(place_id)
         
         if not place:
             return {'error': 'Place not found'}, 404
         
-        if place.owner.id != current_user:  # تاسك 3: التحقق من الملكية - فقط المالك يقدر يعدل
+        # تاسك 4: Admin يتجاوز التحقق من الملكية، User عادي لازم يكون المالك
+        if not is_admin and place.owner.id != current_user_id:
             return {'error': 'Unauthorized action'}, 403  # تاسك 3: خطأ 403 إذا ما كان المالك
         
         place_data = api.payload

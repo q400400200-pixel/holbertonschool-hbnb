@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from flask import request
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_identity  # تاسك 3: استيراد JWT للمصادقة
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt  # تاسك 4: إضافة get_jwt
 from app.services import facade
 
 api = Namespace('reviews', description='Review operations')
@@ -68,13 +68,17 @@ class ReviewResource(Resource):
     @jwt_required()  # تاسك 3: يتطلب تسجيل دخول لتعديل التقييم
     def put(self, review_id):
         """Update a review"""
-        current_user = get_jwt_identity()  # تاسك 3: جلب المستخدم الحالي
+        current_user_id = get_jwt_identity()  # تاسك 3: جلب المستخدم الحالي
+        current_user = get_jwt()  # تاسك 4: جلب كامل معلومات JWT
+        is_admin = current_user.get('is_admin', False)  # تاسك 4: التحقق من Admin
+        
         review = facade.get_review(review_id)
         
         if not review:
             return {'error': 'Review not found'}, 404
         
-        if review.user.id != current_user:  # تاسك 3: التحقق من الملكية - فقط صاحب التقييم يقدر يعدل
+        # تاسك 4: Admin يتجاوز التحقق من الملكية، User عادي لازم يكون صاحب التقييم
+        if not is_admin and review.user.id != current_user_id:
             return {'error': 'Unauthorized action'}, 403  # تاسك 3: خطأ 403 إذا ما كان صاحب التقييم
         
         data = api.payload
@@ -90,13 +94,17 @@ class ReviewResource(Resource):
     @jwt_required()  # تاسك 3: يتطلب تسجيل دخول لحذف التقييم
     def delete(self, review_id):
         """Delete a review"""
-        current_user = get_jwt_identity()  # تاسك 3: جلب المستخدم الحالي
+        current_user_id = get_jwt_identity()  # تاسك 3: جلب المستخدم الحالي
+        current_user = get_jwt()  # تاسك 4: جلب كامل معلومات JWT
+        is_admin = current_user.get('is_admin', False)  # تاسك 4: التحقق من Admin
+        
         review = facade.get_review(review_id)
         
         if not review:
             return {'error': 'Review not found'}, 404
         
-        if review.user.id != current_user:  # تاسك 3: التحقق من الملكية - فقط صاحب التقييم يقدر يمسح
+        # تاسك 4: Admin يتجاوز التحقق من الملكية، User عادي لازم يكون صاحب التقييم
+        if not is_admin and review.user.id != current_user_id:
             return {'error': 'Unauthorized action'}, 403  # تاسك 3: خطأ 403 إذا ما كان صاحب التقييم
         
         deleted = facade.delete_review(review_id)
