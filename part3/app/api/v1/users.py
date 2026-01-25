@@ -3,7 +3,7 @@
 User API endpoints
 """
 from flask_restx import Namespace, Resource, fields
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity  # تاسك 3: استيراد JWT للمصادقة
 from app.services.facade import facade
 
 api = Namespace('users', description='User operations')
@@ -16,7 +16,7 @@ user_model = api.model('User', {
     'password': fields.String(required=True, description='Password')
 })
 
-# User update model (without email and password)
+# تاسك 3: نموذج جديد للتعديل (بدون email و password)
 user_update_model = api.model('UserUpdate', {
     'first_name': fields.String(description='First name'),
     'last_name': fields.String(description='Last name')
@@ -59,25 +59,24 @@ class UserResource(Resource):
             return {'error': 'User not found'}, 404
         return user.to_dict(), 200
     
+    # تاسك 3: endpoint جديد لتعديل بيانات المستخدم
     @api.expect(user_update_model)
     @api.response(200, 'User updated successfully')
     @api.response(404, 'User not found')
     @api.response(403, 'Unauthorized action')
     @api.response(400, 'Invalid input')
-    @jwt_required()
+    @jwt_required()  # تاسك 3: يتطلب تسجيل دخول
     def put(self, user_id):
-        """Update user information (requires authentication)"""
-        current_user = get_jwt_identity()
+        """Update user information"""
+        current_user = get_jwt_identity()  # تاسك 3: جلب المستخدم الحالي
         
-        # Check if user is trying to modify their own data
-        if user_id != current_user:
-            return {'error': 'Unauthorized action'}, 403
+        if user_id != current_user:  # تاسك 3: التحقق - المستخدم يعدل بياناته فقط
+            return {'error': 'Unauthorized action'}, 403  # تاسك 3: خطأ 403 إذا حاول تعديل بيانات غيره
         
         user_data = api.payload
         
-        # Check if trying to modify email or password
-        if 'email' in user_data or 'password' in user_data:
-            return {'error': 'You cannot modify email or password'}, 400
+        if 'email' in user_data or 'password' in user_data:  # تاسك 3: منع تعديل email و password
+            return {'error': 'You cannot modify email or password'}, 400  # تاسك 3: خطأ 400 لتعديل email/password
         
         user = facade.get_user_by_id(user_id)
         if not user:
