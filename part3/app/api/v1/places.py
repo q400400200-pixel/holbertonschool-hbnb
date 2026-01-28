@@ -88,8 +88,17 @@ class PlaceResource(Resource):
         if not place:
             return {'error': 'Place not found'}, 404
         
+        # تاسك 4: التحقق من owner_id بطريقة آمنة
+        # التحقق إذا كان owner هو object أو string
+        if hasattr(place, 'owner_id'):
+            owner_id = place.owner_id
+        elif hasattr(place.owner, 'id'):
+            owner_id = place.owner.id
+        else:
+            owner_id = str(place.owner)
+        
         # تاسك 4: Admin يتجاوز التحقق من الملكية، User عادي لازم يكون المالك
-        if not is_admin and place.owner.id != current_user_id:
+        if not is_admin and owner_id != current_user_id:
             return {'error': 'Unauthorized action'}, 403  # تاسك 3: خطأ 403 إذا ما كان المالك
         
         place_data = api.payload
