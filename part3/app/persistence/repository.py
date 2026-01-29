@@ -4,7 +4,7 @@ This will be replaced with a database in Part 3
 """
 from abc import ABC, abstractmethod
 from app import db
-from app.persistence.repository import SQLAlchemyRepository # task 6
+#from app.persistence.repository import SQLAlchemyRepository # task 6 اذا كان بملف ثاني
 
 class Repository(ABC):
     @abstractmethod
