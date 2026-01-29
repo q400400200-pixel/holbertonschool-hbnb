@@ -4,6 +4,7 @@ This will be replaced with a database in Part 3
 """
 from abc import ABC, abstractmethod
 from app import db
+from app.models.user import User # Task 6 to handle the error from call SQLAlchemyRepository
 #from app.persistence.repository import SQLAlchemyRepository # task 6 اذا كان بملف ثاني
 
 class Repository(ABC):
