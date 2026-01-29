@@ -6,6 +6,10 @@ from abc import ABC, abstractmethod
 from app import db
 from app.models.user import User # Task 6 to handle the error from call SQLAlchemyRepository
 #from app.persistence.repository import SQLAlchemyRepository # task 6 اذا كان بملف ثاني
+# Task 7
+from app.models.amenity import Amenity
+from app.models.place import Place
+from app.models.review import Review
 
 class Repository(ABC):
     @abstractmethod
@@ -108,10 +112,21 @@ class SQLAlchemyRepository(Repository):
 
     def get_by_attribute(self, attr_name, attr_value):
         return self.model.query.filter_by(**{attr_name: attr_value}).first()
-
+# Task 6
 class UserRepository(SQLAlchemyRepository):
     def __init__(self):
         super().__init__(User)
 
     def get_user_by_email(self, email):
         return self.model.query.filter_by(email=email).first()
+            #### Task 7 ####
+class PlaceRepository(SQLAlchemyRepository):
+    def __init__(self):
+        super().__init__(Place)
+    
+class ReviewRepository(SQLAlchemyRepository):
+    def __init__(self):
+        super().__init__(Review)
+class AmenityRepository(SQLAlchemyRepository):
+    def __init__(self):
+        super().__init__(Amenity)
