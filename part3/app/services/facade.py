@@ -3,7 +3,8 @@ from app.models.place import Place
 from app.models.review import Review
 from app.persistence.repository import InMemoryRepository
 from app.persistence.repository import SQLAlchemyRepository # task 5
-from app.services.repositories.user_repository import UserRepository # Task 6
+#from app.services.repositories.user_repository import UserRepository # Task 6 المطلوب بس الباث مو صحيح لمشروعنا
+from app.persistence.repository import UserRepository # Task 6
 
 
 class HBnBFacade:
