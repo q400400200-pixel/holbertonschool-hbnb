@@ -8,7 +8,7 @@ from app import db
 class Review(BaseModel):
     """Review class"""
     
-   """ def __init__(self, text, rating, place, user):
+    """ def __init__(self, text, rating, place, user):
         #Initialize Review
         super().__init__()
         
@@ -16,7 +16,7 @@ class Review(BaseModel):
        self.rating = self._validate_rating(rating)
         self.place = place
         self.user = user
-        """
+    """
          
     # Task 7
     __tablename__ = 'reviews'
