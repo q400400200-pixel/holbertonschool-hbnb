@@ -3,7 +3,7 @@
 Review Model
 """
 from app.models.base_model import BaseModel
-
+from app import db 
 
 class Review(BaseModel):
     """Review class"""
@@ -19,8 +19,8 @@ class Review(BaseModel):
     # Task 7
     __tablename__ = 'reviews'
     
-    _text = db.Column(db.Text, nullable=False)
-    _rating = db.Column(db.Integer, nullable=False)
+    text = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
     def _validate_text(self, text):
         """Validate review text"""
         if not text or not isinstance(text, str):
