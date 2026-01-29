@@ -8,19 +8,27 @@ from app.models.base_model import BaseModel
 class Place(BaseModel):
     """Place class"""
     
-    def __init__(self, title, description, price, latitude, longitude, owner):
-        """Initialize Place"""
-        super().__init__()
+    #def __init__(self, title, description, price, latitude, longitude, owner):
+    #    """Initialize Place"""
+    #    super().__init__()
         
-        self.title = self._validate_title(title)
-        self.description = description if description else ""
-        self.price = self._validate_price(price)
-        self.latitude = self._validate_latitude(latitude)
-        self.longitude = self._validate_longitude(longitude)
-        self.owner = owner
+     #   self.title = self._validate_title(title)
+     #   self.description = description if description else ""
+     #  self.price = self._validate_price(price)
+     #  self.latitude = self._validate_latitude(latitude)
+     #   self.longitude = self._validate_longitude(longitude)
+     #   self.owner = owner
         
-        self.reviews = []
-        self.amenities = []
+      #  self.reviews = []
+      #  self.amenities = []
+    #ُTask 7
+    __tablename__ = 'places'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(500))
+    price = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
     
     def _validate_title(self, title):
         """Validate title"""
