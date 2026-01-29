@@ -8,11 +8,15 @@ from app.models.base_model import BaseModel
 class Amenity(BaseModel):
     """Amenity class"""
     
-    def __init__(self, name):
-        """Initialize Amenity"""
-        super().__init__()
-        self.name = self._validate_name(name)
-    
+   # def __init__(self, name):
+   #    """Initialize Amenity"""
+   #    super().__init__()
+   #     self.name = self._validate_name(name)
+    #Task 7
+    __tablename__ = 'amenities'
+
+    _name = db.Column(db.String(128), nullable=False, unique=True)
+
     def _validate_name(self, name):
         """Validate amenity name"""
         if not name or not isinstance(name, str):
