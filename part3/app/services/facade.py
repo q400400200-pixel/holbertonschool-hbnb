@@ -2,10 +2,13 @@ from app.models.user import User
 from app.models.place import Place
 from app.models.review import Review
 from app.persistence.repository import InMemoryRepository
+from app.persistence.repository import SQLAlchemyRepository # task 5
+
 
 class HBnBFacade:
     def __init__(self):
-        self.user_repo = InMemoryRepository()
+        #self.user_repo = InMemoryRepository()
+        self.user_repo = SQLAlchemyRepository(User) # task 5
         self.place_repo = InMemoryRepository()      # تاسك 3: إضافة repository للأماكن
         self.review_repo = InMemoryRepository()     # تاسك 3: إضافة repository للتقييمات
         self.amenity_repo = InMemoryRepository()    # تاسك 3: إضافة repository للمرافق
