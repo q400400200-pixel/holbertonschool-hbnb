@@ -17,7 +17,7 @@ class Amenity(BaseModel):
     __tablename__ = 'amenities'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False, unique=True)
+    name = db.Column(db.String(255), nullable=False, unique=True)
     # relationship
     places = db.relationship(
         'Place',
