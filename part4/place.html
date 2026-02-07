@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBnB - Place Details</title>
+    <link rel="icon" href="images/icon.png" type="image/png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <img src="images/logo.png" alt="HBnB Logo" class="logo">
+        <a href="login.html" class="login-button" id="login-link">Login</a>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html">← Back to Places</a>
+        <a href="login.html">Login</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Place Details -->
+        <section id="place-details" class="place-details">
+            <!-- Details will be loaded here by JavaScript -->
+        </section>
+
+        <!-- Reviews Section -->
+        <section class="reviews-section">
+            <h2>Reviews</h2>
+            <div id="reviews-list">
+                <!-- Reviews will be loaded here by JavaScript -->
+            </div>
+            
+            <!-- Add Review Button (only for logged-in users) -->
+            <button id="add-review-btn" class="details-button" style="display: none;">Add Review</button>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 HBnB. All rights reserved.</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
