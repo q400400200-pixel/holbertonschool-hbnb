@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBnB - Add Review</title>
+    <link rel="icon" href="images/icon.png" type="image/png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <img src="images/logo.png" alt="HBnB Logo" class="logo">
+        <a href="index.html" class="login-button">Home</a>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" onclick="history.back()">← Back</a>
+        <a href="index.html">Home</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="form-container">
+            <h1>Add Your Review</h1>
+            
+            <form id="review-form" class="add-review form">
+                <div class="form-group">
+                    <label for="rating">Rating:</label>
+                    <select id="rating" name="rating" required>
+                        <option value="">Select Rating</option>
+                        <option value="5">⭐⭐⭐⭐⭐ (5 - Excellent)</option>
+                        <option value="4">⭐⭐⭐⭐ (4 - Very Good)</option>
+                        <option value="3">⭐⭐⭐ (3 - Good)</option>
+                        <option value="2">⭐⭐ (2 - Fair)</option>
+                        <option value="1">⭐ (1 - Poor)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="comment">Your Review:</label>
+                    <textarea id="comment" name="comment" rows="5" required placeholder="Share your experience..."></textarea>
+                </div>
+                
+                <button type="submit">Submit Review</button>
+                
+                <p id="error-message" class="error"></p>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 HBnB. All rights reserved.</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
