@@ -9,19 +9,18 @@ from app.models.place import place_amenity
 class Amenity(BaseModel):
     """Amenity class"""
     
-   # def __init__(self, name):
-   #    """Initialize Amenity"""
-   #    super().__init__()
-   #     self.name = self._validate_name(name)
-    #Task 7
-   __tablename__ = 'amenities'
-   # BaseModel يوفر id تلقائياً كـ String UUID
-   name = db.Column(db.String(255), nullable=False, unique=True)    # relationship
+    # Task 7
+    __tablename__ = 'amenities'
+    
+    name = db.Column(db.String(255), nullable=False, unique=True)
+    
+    # relationship
     places = db.relationship(
         'Place',
         secondary=place_amenity,
         back_populates='amenities'
     )
+    
     def _validate_name(self, name):
         """Validate amenity name"""
         if not name or not isinstance(name, str):
