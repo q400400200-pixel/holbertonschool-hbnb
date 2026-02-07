@@ -11,9 +11,8 @@ class User(BaseModel):
     password = db.Column(db.String(255), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
     # Relationships
-    places = db.relationship('Place', back_populates='owner', cascade='all, delete-orphan')
-    reviews = db.relationship('Review', back_populates='user', cascade='all, delete-orphan')
-    
+    places = db.relationship('Place', back_populates='owner', cascade='all, delete-orphan', foreign_keys='Place.owner_id')
+    reviews = db.relationship('Review', back_populates='user', cascade='all, delete-orphan', foreign_keys='Review.user_id')
     """
     def __init__(self, first_name, last_name, email, password=None, is_admin=False):
         self.id = str(uuid.uuid4())
