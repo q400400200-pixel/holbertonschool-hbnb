@@ -27,13 +27,16 @@ class HBnBFacade:
         if self.user_repo.get_by_attribute('email', email):
             raise ValueError("Email already registered")
         
+        # ✅ إنشاء المستخدم بدون تمرير password
         user = User(
             first_name=user_data['first_name'],
             last_name=user_data['last_name'],
             email=email,
-            password=user_data['password'],
             is_admin=user_data.get('is_admin', False)
         )
+        
+        # ✅ تشفير كلمة المرور قبل الحفظ
+        user.hash_password(user_data['password'])
         
         self.user_repo.add(user)
         return user
