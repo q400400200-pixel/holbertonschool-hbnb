@@ -300,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchPlaces();
     }
 
-   if (currentPage.includes('place.html')) {
+  if (currentPage.includes('place.html')) {
     const urlParams = new URLSearchParams(window.location.search);
     const placeId = urlParams.get('id');
 
