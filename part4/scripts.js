@@ -170,14 +170,21 @@ function displayPlaceDetails(place) {
     const priceEl = document.getElementById('place-price');
     const locationEl = document.getElementById('place-location');
 
-    if (titleEl) titleEl.textContent = place.title;
+    // بعض الـ APIs تستخدم name بدل title
+    const placeTitle = place.title || place.name || 'Place';
+
+    if (titleEl) titleEl.textContent = placeTitle;
     if (imageEl) {
         imageEl.src = 'images/placeholder.jpg';
-        imageEl.alt = place.title;
+        imageEl.alt = placeTitle;
     }
     if (descEl) descEl.textContent = place.description || 'No description available';
     if (priceEl) priceEl.textContent = `$${place.price_per_night} per night`;
-    if (locationEl) locationEl.textContent = `${place.city || ''}, ${place.country || ''}`;
+    if (locationEl) {
+        const city = place.city || '';
+        const country = place.country || '';
+        locationEl.textContent = `${city}${city && country ? ', ' : ''}${country}`;
+    }
 
     const amenitiesList = document.getElementById('amenities-list');
     if (amenitiesList) {
@@ -185,7 +192,8 @@ function displayPlaceDetails(place) {
         if (place.amenities && place.amenities.length > 0) {
             place.amenities.forEach(amenity => {
                 const li = document.createElement('li');
-                li.textContent = amenity;
+                // amenity ممكن يكون string أو object
+                li.textContent = (typeof amenity === 'string') ? amenity : (amenity.name || 'Amenity');
                 amenitiesList.appendChild(li);
             });
         } else {
@@ -292,13 +300,21 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchPlaces();
     }
 
-    if (currentPage.includes('place.html')) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const placeId = urlParams.get('id');
-        if (placeId) {
-            fetchPlaceDetails(placeId);
-        }
+   if (currentPage.includes('place.html')) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const placeId = urlParams.get('id');
+
+    // Show Add Review form only if authenticated
+    const token = getCookie('token');
+    const addReviewSection = document.getElementById('add-review');
+    if (addReviewSection) {
+        addReviewSection.style.display = token ? 'block' : 'none';
     }
+
+    if (placeId) {
+        fetchPlaceDetails(placeId);
+    }
+}
 
     const countryFilter = document.getElementById('country-filter');
     if (countryFilter) {
