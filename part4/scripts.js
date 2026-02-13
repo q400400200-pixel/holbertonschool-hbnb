@@ -2,6 +2,14 @@
 const API_BASE_URL = 'http://127.0.0.1:5000/api/v1';
 
 // ==================== Cookie Helper Functions ====================
+// Check for the JWT token in cookies and redirect unauthenticated users.
+function checkAuthentication() {
+      const token = getCookie('token');
+      if (!token) {
+          window.location.href = 'index.html';
+      }
+      return token;
+  }
 
 function getCookie(name) {
     const cookies = document.cookie.split(';');
@@ -24,7 +32,7 @@ function checkAuth() {
     const token = getCookie('token');
     const loginLink = document.getElementById('login-link');
 
-    if (loginLink) {
+    /*if (loginLink) {
         if (token) {
             loginLink.textContent = 'Logout';
             loginLink.href = '#';
@@ -36,6 +44,13 @@ function checkAuth() {
             loginLink.textContent = 'Login';
             loginLink.href = 'login.html';
         }
+    }*/
+    if (!loginLink) return;
+
+    if (!token) {
+        loginLink.style.display = 'block';
+    } else {
+        loginLink.style.display = 'none';
     }
 }
 
@@ -79,6 +94,7 @@ function logout() {
 }
 
 // ==================== Places ====================
+let allPlaces = [];
 
 async function fetchPlaces(country = '') {
     try {
@@ -98,6 +114,7 @@ async function fetchPlaces(country = '') {
 
         if (response.ok) {
             const places = await response.json();
+            allPlaces = places;
             displayPlaces(places);
         } else if (response.status === 401) {
             logout();
@@ -126,6 +143,7 @@ function displayPlaces(places) {
     places.forEach(place => {
         const card = document.createElement('div');
         card.className = 'place-card';
+        card.setAttribute('data-price', place.price_per_night);
         card.innerHTML = `
             <img src="images/placeholder.jpg" alt="${place.title}" onerror="this.src='images/placeholder.jpg'">
             <h3>${place.title}</h3>
@@ -137,6 +155,28 @@ function displayPlaces(places) {
     });
 }
 
+function filterByPrice() {
+    const priceFilter = document.getElementById('price-filter');
+    if (!priceFilter) return;
+
+    const selectedPrice = priceFilter.value;
+    const placeCards = document.querySelectorAll('.place-card');
+
+    placeCards.forEach(card => {
+        const price = parseFloat(card.getAttribute('data-price'));
+        
+        if (selectedPrice === 'all') {
+            card.style.display = 'block';
+        } else {
+            const maxPrice = parseFloat(selectedPrice);
+            if (price <= maxPrice) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        }
+    });
+}
 // ==================== Place Details ====================
 
 async function fetchPlaceDetails(placeId) {
@@ -231,6 +271,7 @@ function displayReviews(reviews) {
 async function addReview(event) {
     event.preventDefault();
 
+    const token = checkAuthentication();
     const urlParams = new URLSearchParams(window.location.search);
     const placeId = urlParams.get('id');
     const rating = document.getElementById('rating').value;
@@ -240,14 +281,7 @@ async function addReview(event) {
         alert('No place selected');
         return;
     }
-
     try {
-        const token = getCookie('token');
-        if (!token) {
-            window.location.href = 'login.html';
-            return;
-        }
-
         const response = await fetch(`${API_BASE_URL}/places/${placeId}/reviews`, {
             method: 'POST',
             headers: {
@@ -259,7 +293,8 @@ async function addReview(event) {
 
         if (response.ok) {
             alert('Review added successfully!');
-            window.location.href = `place.html?id=${placeId}`;
+           // window.location.href = `place.html?id=${placeId}`;
+            document.getElementById('review-form').reset();
         } else if (response.status === 401) {
             logout();
         } else {
@@ -301,15 +336,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
   if (currentPage.includes('place.html')) {
+      
+    checkAuthentication();
+      
     const urlParams = new URLSearchParams(window.location.search);
     const placeId = urlParams.get('id');
 
     // Show Add Review form only if authenticated
-    const token = getCookie('token');
+    /*const token = getCookie('token');
     const addReviewSection = document.getElementById('add-review-btn');
     if (addReviewSection) {
         addReviewSection.style.display = token ? 'block' : 'none';
-    }
+    }*/
 
     if (placeId) {
         fetchPlaceDetails(placeId);
@@ -319,6 +357,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const countryFilter = document.getElementById('country-filter');
     if (countryFilter) {
         countryFilter.addEventListener('change', filterByCountry);
+    }
+
+    const priceFilter = document.getElementById('price-filter');
+    if (priceFilter) {
+        priceFilter.addEventListener('change', filterByPrice);
     }
 
     const reviewForm = document.getElementById('review-form');
