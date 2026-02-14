@@ -143,13 +143,13 @@ function displayPlaces(places) {
     places.forEach(place => {
         const card = document.createElement('div');
         card.className = 'place-card';
-        card.setAttribute('data-price', place.price_per_night);
+        card.setAttribute('data-price', place.price_per_night || place.price);
         card.innerHTML = `
             <img src="images/placeholder.jpg" alt="${place.title}" onerror="this.src='images/placeholder.jpg'">
             <h3>${place.title}</h3>
-            <p class="price">$${place.price_per_night} per night</p>
+            <p class="price">$${place.price_per_night || place.price} per night</p>
             <p class="location">${place.city || ''}, ${place.country || ''}</p>
-            <a href="place.html?id=${place.id}" class="details-button">View Details</a>
+            <a href="places.html?id=${place.id}" class="details-button">View Details</a>
         `;
         container.appendChild(card);
     });
@@ -219,7 +219,7 @@ function displayPlaceDetails(place) {
         imageEl.alt = placeTitle;
     }
     if (descEl) descEl.textContent = place.description || 'No description available';
-    if (priceEl) priceEl.textContent = `$${place.price_per_night} per night`;
+    if (priceEl) priceEl.textContent = `$${place.price_per_night || place.price} per night`;
     if (locationEl) {
         const city = place.city || '';
         const country = place.country || '';
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchPlaces();
     }
 
-  if (currentPage.includes('place.html')) {
+  if (currentPage.includes('places.html')) {
       
     checkAuthentication();
       
