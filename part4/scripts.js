@@ -130,6 +130,18 @@ async function fetchPlaces(country = '') {
     }
 }
 
+// Image mapping for places
+const placeImages = {
+    'cozy apartment': 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop',
+    'luxury beach villa': 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=600&h=400&fit=crop',
+    'mountain cabin retreat': 'https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=600&h=400&fit=crop'
+};
+
+function getPlaceImage(title) {
+    const key = title.toLowerCase();
+    return placeImages[key] || 'images/placeholder.jpg';
+}
+
 function displayPlaces(places) {
     const container = document.getElementById('places-list');
     if (!container) return;
@@ -144,8 +156,9 @@ function displayPlaces(places) {
         const card = document.createElement('div');
         card.className = 'place-card';
         card.setAttribute('data-price', place.price_per_night || place.price);
+        const imageUrl = getPlaceImage(place.title);
         card.innerHTML = `
-            <img src="images/placeholder.jpg" alt="${place.title}" onerror="this.src='images/placeholder.jpg'">
+            <img src="${imageUrl}" alt="${place.title}" onerror="this.src='images/placeholder.jpg'">
             <h3>${place.title}</h3>
             <p class="price">$${place.price_per_night || place.price} per night</p>
             <p class="location">${place.city || ''}, ${place.country || ''}</p>
@@ -215,8 +228,9 @@ function displayPlaceDetails(place) {
 
     if (titleEl) titleEl.textContent = placeTitle;
     if (imageEl) {
-        imageEl.src = 'images/placeholder.jpg';
+        imageEl.src = getPlaceImage(placeTitle);
         imageEl.alt = placeTitle;
+        imageEl.onerror = function() { this.src = 'images/placeholder.jpg'; };
     }
     if (descEl) descEl.textContent = place.description || 'No description available';
     if (priceEl) priceEl.textContent = `$${place.price_per_night || place.price} per night`;
@@ -336,21 +350,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
   if (currentPage.includes('places.html')) {
-      
-    checkAuthentication();
-      
     const urlParams = new URLSearchParams(window.location.search);
     const placeId = urlParams.get('id');
 
-    // Show Add Review form only if authenticated
-    /*const token = getCookie('token');
-    const addReviewSection = document.getElementById('add-review-btn');
-    if (addReviewSection) {
-        addReviewSection.style.display = token ? 'block' : 'none';
-    }*/
+    // Show Add Review button only if authenticated
+    const token = getCookie('token');
+    const addReviewBtn = document.getElementById('add-review-btn');
+    if (addReviewBtn) {
+        if (token && placeId) {
+            addReviewBtn.style.display = 'inline-block';
+            addReviewBtn.href = `add_review.html?id=${placeId}`;
+        } else {
+            addReviewBtn.style.display = 'none';
+        }
+    }
 
     if (placeId) {
         fetchPlaceDetails(placeId);
+    } else {
+        document.getElementById('place-title').textContent = 'Place not found';
     }
 }
 
