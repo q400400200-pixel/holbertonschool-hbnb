@@ -337,7 +337,7 @@ function displayReviews(reviews) {
         reviewCard.innerHTML = `
             <h4>${review.user_name || 'Anonymous'}</h4>
             <p class="rating">Rating: ${review.rating}/5</p>
-            <p>${review.comment}</p>
+            <p>${review.text || review.comment || ''}</p>
         `;
         reviewsList.appendChild(reviewCard);
     });
@@ -365,19 +365,24 @@ async function addReview(event) {
         return;
     }
     try {
-        const response = await fetch(`${API_BASE_URL}/places/${placeId}/reviews`, {
+        const response = await fetch(`${API_BASE_URL}/reviews/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ rating: parseInt(rating), comment })
+            body: JSON.stringify({ 
+                rating: parseInt(rating), 
+                text: comment,
+                place_id: placeId 
+            })
         });
 
         if (response.ok) {
             alert('Review added successfully!');
-           // window.location.href = `place.html?id=${placeId}`;
             document.getElementById('review-form').reset();
+            // Reload place details to show new review
+            fetchPlaceDetails(placeId);
         } else if (response.status === 401) {
             logout();
         } else {
