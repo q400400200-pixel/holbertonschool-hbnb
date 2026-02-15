@@ -308,8 +308,25 @@ async function addReview(event) {
 // ==================== Filters ====================
 
 function filterByCountry() {
-    const country = document.getElementById('country-filter').value;
-    fetchPlaces(country);
+    const selectedCity = document.getElementById('country-filter').value;
+    const placeCards = document.querySelectorAll('.place-card');
+
+    placeCards.forEach(card => {
+        if (!selectedCity) {
+            // Show all if "All Cities" is selected
+            card.style.display = 'block';
+        } else {
+            // Get the location text from the card
+            const locationText = card.querySelector('.location').textContent;
+            
+            // Check if the selected city is in the location
+            if (locationText.includes(selectedCity)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        }
+    });
 }
 
 // ==================== Page Initialization ====================
